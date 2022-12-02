@@ -71,27 +71,54 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var solution = [];
   var board = new Board({n: n});
+//debugger
+  if (n === 0) {
+    return solution;
+  }
 
   if (n === 2 || n === 3) {
     return 0;
   }
 
-  for (var i = 0; i < n; i++) {
-    for (var j = 0; j < n; j++) {
-      if (i === 0 && j === 0 && n !== 1) {
-        j++;
-      }
-      board.togglePiece(i, j);
+  var newCol = 0;
 
-      if (board.hasAnyRowConflicts() || board.hasAnyColConflicts() || board.hasAnyMajorDiagonalConflicts() || board.hasAnyMinorDiagonalConflicts()) {
+  var createPotentialSolution = function(newCol) {
+    // if (newCol === undefined) {
+    //   newCol = 0;
+    // }
+    var board = new Board({n: n});
+    for (var i = 0; i < n; i++) {
+      for (var j = newCol; j < n; j++) {
+        if (i === 0 && j === 0 && n !== 1) {
+          j++;
+        }
         board.togglePiece(i, j);
+
+        if (board.hasAnyRowConflicts() || board.hasAnyColConflicts() || board.hasAnyMajorDiagonalConflicts() || board.hasAnyMinorDiagonalConflicts()) {
+          board.togglePiece(i, j);
+        }
       }
+    }
+  };
+
+  createPotentialSolution(newCol);
+//debugger
+  var counter = 0;
+  for (var l = 0; l < board.attributes.n; l++) {
+    if (board.attributes[l].includes(1)) {
+      counter++;
     }
   }
 
-  for (var k = 0; k < n; k++) {
-    solution.push(board.attributes[k]);
+  if (counter === n) {
+    for (var k = 0; k < n; k++) {
+      solution.push(board.attributes[k]);
+    }
+  } else {
+    createPotentialSolution(newCol + 1);
   }
+
+
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
