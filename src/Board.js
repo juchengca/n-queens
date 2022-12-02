@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -140,9 +140,21 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow, startRow) {
+
       var counter = 0;
+
+      if (startRow !== undefined) {
+        for (var i = startRow; i < this.attributes.n; i++) {
+          if (this.attributes[i + 1][majorDiagonalColumnIndexAtFirstRow + 1] === 1) {
+            return true;
+          }
+        }
+      }
+
+
       var shift = 0;
+
       for (var i = majorDiagonalColumnIndexAtFirstRow; i < this.attributes.n; i++) {
         if (this.attributes[i][shift] === 1) {
           counter++;
@@ -158,13 +170,18 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      // Look through the whole matrix L->R and then top-down to find the first placed piece
+        // When finding a piece (i.e. a 1), pass it in to hasMajorDiagonalConflictAt
       for (var i = 0; i < this.attributes.n; i++) {
-        if (this.hasMajorDiagonalConflictAt(i)) {
-          return true;
-        }
+        for (var j = 0; j < this.attributes.n; j++) {
+          if (this.attributes[i][j] === 1) {
+            if (this.hasMajorDiagonalConflictAt(j, i)) {
+              return true;
+            }
+          }
       }
       return false;
-    },
+    };
 
 
 
