@@ -83,10 +83,6 @@ window.findNQueensSolution = function(n) {
       }
       board.togglePiece(i, j);
 
-      if (n === 4) {
-        debugger
-      }
-
       if (board.hasAnyRowConflicts() || board.hasAnyColConflicts() || board.hasAnyMajorDiagonalConflicts() || board.hasAnyMinorDiagonalConflicts()) {
         board.togglePiece(i, j);
       }
